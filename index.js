@@ -3,7 +3,6 @@ import multer from 'multer';
 import { PinataSDK } from 'pinata';
 import fs from 'fs';
 import { Blob } from 'buffer';
-import fetch from 'node-fetch';
 import tinyurl from 'tinyurl';
 import 'dotenv/config';
 import cors from 'cors';
