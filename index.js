@@ -4,6 +4,7 @@ import { PinataSDK } from 'pinata';
 import fs from 'fs';
 import { Blob } from 'buffer';
 import fetch from 'node-fetch';
+import tinyurl from 'tinyurl';
 import 'dotenv/config';
 import cors from 'cors';
 
@@ -30,26 +31,7 @@ app.post('/upload-file', upload.array('files', 10), async (req, res) => {
             expires: 1800,
         });
 
-        const response = await fetch('https://api-ssl.bitly.com/v4/shorten', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${process.env.BITLY_ACCESS_TOKEN}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "long_url": longUrl,
-                "domain": "bit.ly"
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Error shortening URL');
-        }
-
-        const shortUrl = data.link;
-
+        const shortUrl = await tinyurl.shorten(longUrl);
         fs.unlinkSync(filePath);
         res.json({ shortUrl });
     } catch (error) {
